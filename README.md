@@ -3,8 +3,8 @@
 
 This project covers Spring Social Facebook connectivity in typical way using pop up. No current page redirection. Pop up closes after successful login and sending required data to back-end for further tasks like **Noifications**, **Posting**, etc.
 
-##### Key Points
-Pop UP based sign-in using **J**ava **S**cript **|** **_User Access Token_** without extra programming efforts.
+#### Key Points
+Pop UP based sign-in using Java Script **|** User Access Token without extra programming efforts.
 
 #### Development Environment
 
