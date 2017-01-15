@@ -19,10 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.lang.reflect.Field;
 
-/**
- * Created by Faisal on 01/13/17.
- */
-
 @Controller
 @RequestMapping("getData")
 public class SpringSocialController {

@@ -5,10 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * Created by Faisal on 01/14/17.
- */
-
 @Entity
 @Table(name = "SPRING_SOCIAL")
 public class SpringSocial {

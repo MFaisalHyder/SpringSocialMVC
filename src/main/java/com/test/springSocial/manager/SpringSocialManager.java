@@ -2,10 +2,6 @@ package com.test.springSocial.manager;
 
 import com.test.springSocial.entity.SpringSocial;
 
-/**
- * Created by Faisal on 01/14/17.
- */
-
 public interface SpringSocialManager {
 
     /**
