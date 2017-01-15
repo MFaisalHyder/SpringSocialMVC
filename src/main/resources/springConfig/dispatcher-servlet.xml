@@ -69,7 +69,7 @@
 
     <bean id="usersConnectionRepository" class="org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository">
         <!-- persisting DB -->
-        <!--        <constructor-arg ref="dataSource"/>        -->
+        <!--    <constructor-arg ref="dataSource"/>   -->
         <!-- in memory DB -->
         <constructor-arg ref="dataSource2"/>
         <constructor-arg ref="connectionFactoryLocator"/>
