@@ -3,7 +3,7 @@ body {
 }
 .styleButton {
     background: url('/SpringSocialMVC/resources/img/facebook.png') no-repeat;
-    font-size: 18px;
+    font-size: 16px;
     border: 2px solid navy;
     border-radius: 5px;
     width: 230px;

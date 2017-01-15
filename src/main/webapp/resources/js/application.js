@@ -13,7 +13,7 @@ function facebookForm() {
     temp.close();
 }
 
-function fetchData($scope, $http) {
+function fetchData() {
 
     var request = new XMLHttpRequest();
 

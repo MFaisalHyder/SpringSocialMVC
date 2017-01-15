@@ -14,7 +14,7 @@
         <form action="connect/facebook" method="POST" name="fbForm">
             <input type="hidden" name="scope" value="user_posts" />
             <a href="javascript:;" onclick="facebookForm()">
-                <input type="image" src="resources/img/facebook.png" class=""/>
+                <input type="image" src="resources/img/facebook.png" />
             </a>
         </form>
     </body>

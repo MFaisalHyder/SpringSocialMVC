@@ -9,7 +9,7 @@
     </head>
 
     <body onload="fetchData();">
-        <h3> Thank you for Logging IN</h3>
+        <h3> Thank you for Logging in!</h3>
     </body>
 
 </html>
