@@ -1,0 +1,15 @@
+body {
+    background-color: gainsboro;
+}
+.styleButton {
+    background: url('/SpringSocialMVC/resources/img/facebook.png') no-repeat;
+    font-size: 18px;
+    border: 2px solid navy;
+    border-radius: 5px;
+    width: 230px;
+    height: 52px;
+}
+
+.popup_background {
+    background-color: lightgrey;
+}

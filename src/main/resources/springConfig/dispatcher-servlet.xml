@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/jdbc
+		http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+		http://www.springframework.org/schema/data/jpa
+		http://www.springframework.org/schema/data/jpa/spring-jpa.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <mvc:annotation-driven/>
+    <context:component-scan base-package="com.test.springSocial"/>
+    <jpa:repositories base-package="com.test.springSocial.repository"/>
+
+    <!-- Resource Handlers -->
+    <mvc:resources mapping="/resources/**" location="/resources/"/>
+
+    <!-- Property Resolver -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations" value="classpath:application.properties"/>
+    </bean>
+
+    <!-- JSP Resolver -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/"/>
+        <property name="suffix" value=".jsp"/>
+        <property name="order" value="0"/>
+    </bean>
+
+    <!-- Thymeleaf Resolver -->
+    <!--
+    <bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+        <property name="prefix" value="/WEB-INF/views/"/>
+        <property name="suffix" value=".html"/>
+        <property name="templateMode" value="HTML5"/>
+    </bean>
+
+    <bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
+        <property name="templateResolver" ref="templateResolver"/>
+    </bean>
+
+    <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+        <property name="templateEngine" ref="templateEngine"/>
+        <property name="order" value="0"/>
+        <property name="viewNames" value="connect/*"/>
+    </bean>
+    -->
+
+    <!-- Spring Social Beans -->
+    <bean id="connectionFactoryLocator" class="org.springframework.social.connect.support.ConnectionFactoryRegistry">
+        <property name="connectionFactories">
+            <list>
+                <bean class="org.springframework.social.facebook.connect.FacebookConnectionFactory">
+                    <constructor-arg value="${spring.social.facebook.appId}"/>
+                    <constructor-arg value="${spring.social.facebook.appSecret}"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="usersConnectionRepository" class="org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository">
+        <!-- persisting DB -->
+        <!--        <constructor-arg ref="dataSource"/>        -->
+        <!-- in memory DB -->
+        <constructor-arg ref="dataSource2"/>
+        <constructor-arg ref="connectionFactoryLocator"/>
+        <constructor-arg ref="textEncryptor"/>
+    </bean>
+
+    <bean id="connectionRepository" factory-method="createConnectionRepository"
+          factory-bean="usersConnectionRepository" scope="request">
+        <constructor-arg value="admin"/>
+        <aop:scoped-proxy proxy-target-class="false"/>
+    </bean>
+
+    <bean id="textEncryptor" class="org.springframework.security.crypto.encrypt.Encryptors" factory-method="noOpText"/>
+
+    <bean class="org.springframework.social.connect.web.ConnectController">
+        <constructor-arg ref="connectionFactoryLocator"/>
+        <constructor-arg ref="connectionRepository"/>
+    </bean>
+
+    <!-- Persisting H2 DB (saves on Disk under User in main drive) -->
+    <!--
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.h2.Driver"/>
+        <property name="url" value="jdbc:h2:~/db/socialUserConnectionDB"/>
+        <property name="username" value="sa"/>
+        <property name="password" value="sa"/>
+    </bean>
+
+    <jdbc:initialize-database data-source="dataSource" enabled="true" ignore-failures="ALL">
+        <jdbc:script location="classpath:db/schema.sql"/>
+    </jdbc:initialize-database>
+    -->
+
+    <!-- for In Memory H2 DataSource -->
+    <jdbc:embedded-database id="dataSource2" type="H2">
+        <jdbc:script location="classpath:db/schema.sql"/>
+    </jdbc:embedded-database>
+
+    <!-- Spring Data JPA Beans -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="socialMediaUsers"/>
+        <property name="dataSource" ref="dataSource2"/>
+        <property name="packagesToScan">
+            <list>
+                <value>com.test.springSocial.entity</value>
+            </list>
+        </property>
+        <property name="persistenceProvider">
+            <bean class="org.hibernate.jpa.HibernatePersistenceProvider"/>
+        </property>
+        <property name="jpaProperties">
+            <map>
+                <entry key="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+                <entry key="hibernate.hbm2ddl.auto" value="create"/>
+                <entry key="hibernate.hbm2ddl.import_files" value="import_data.sql"/>
+                <entry key="hibernate.show_sql" value="true"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+</beans>
